@@ -1,0 +1,3 @@
+[submodule "charts/guacamole"]
+	path = charts/guacamole
+	url = git@github.com:arlyon/apache-guacamole-helm-chart.git
