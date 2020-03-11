@@ -16,3 +16,11 @@ htpasswd -c ./auth arlyon
 kubectl create secret generic auth-secret --from-file auth
 kubectl apply -f kubernetes/traefik-dashboard.yaml
 ```
+
+## ExternalDNS
+
+ExternalDNS is installed into the main namespace.
+
+```
+helm install external-dns stable/external-dns --values=config/external-dns-values.yaml
+```
