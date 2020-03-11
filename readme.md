@@ -24,3 +24,13 @@ ExternalDNS is installed into the main namespace.
 ```
 helm install external-dns stable/external-dns --values=config/external-dns-values.yaml
 ```
+
+## Guacamole
+
+You can use this helm chart:
+
+```
+kubectl create namespace guacamole
+cd charts/guacamole-helm-chart
+helm install gaucamole . --values=../../config/guacamole-values.yaml --namespace=guacamole
+```

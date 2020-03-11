@@ -1,0 +1,36 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: guacamole
+spec:
+  entryPoints:
+  - websecure
+  routes:
+  - kind: Rule
+    match: Host(`guacamole.arlyon.dev`)
+    services:
+    - name: guacamole
+      namespace: guacamole
+      port: 80
+    middlewares:
+    - name: replacepath
+  tls:
+    certResolver: ssl
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: guacamole-external-name
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: guacamole.arlyon.dev
+spec:
+  type: ExternalName
+  externalName: traefik.arlyon.dev
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: replacepath
+spec:
+  addPrefix:
+    prefix: /guacamole

@@ -1,0 +1,20 @@
+guacamole:
+  configurationFiles:
+    guacamole.properties: |-
+      enable-environment-properties: true
+      # # OIDC properties
+      # openid-authorization-endpoint:
+      # openid-jwks-endpoint:
+      # openid-issuer:
+      # openid-client-id: guacamole
+      # openid-redirect-uri:
+      # openid-username-claim-type: username
+      # openid-scope: openid email profile
+      # openid-allowed-clock-skew: 500
+  ingress:
+    enabled: false
+  mysql:
+    MYSQL_HOSTNAME: guacamole-mysql
+    MYSQL_PORT: 3306
+mysql:
+  mysqlRootPassword: gcEsVy#Krr9oD$
