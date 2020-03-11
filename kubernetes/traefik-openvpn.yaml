@@ -17,6 +17,7 @@ kind: Service
 apiVersion: v1
 metadata:
   name: openvpn-external-name
+  namespace: openvpn
   annotations:
     external-dns.alpha.kubernetes.io/hostname: vpn.arlyon.dev
 spec:

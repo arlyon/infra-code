@@ -1,7 +1,3 @@
-iamge:
-  name: traefik
-  tag: 2.1.3
-
 dashboard:
   enable: true
 
@@ -9,3 +5,7 @@ additionalArguments:
 - --certificatesresolvers.ssl.acme.tlschallenge=true
 - --certificatesresolvers.ssl.acme.email=alex@arlyon.dev
 - --certificatesresolvers.ssl.acme.storage=acme.json
+
+# for use with minikube
+service:
+  type: NodePort

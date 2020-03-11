@@ -2,6 +2,7 @@ apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
 metadata:
   name: guacamole
+  namespace: guacamole
 spec:
   entryPoints:
   - websecure
@@ -21,6 +22,7 @@ kind: Service
 apiVersion: v1
 metadata:
   name: guacamole-external-name
+  namespace: guacamole
   annotations:
     external-dns.alpha.kubernetes.io/hostname: guacamole.arlyon.dev
 spec:

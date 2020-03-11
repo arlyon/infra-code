@@ -1,0 +1,28 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: minio
+  namespace: minio
+spec:
+  entryPoints:
+  - websecure
+  routes:
+  - kind: Rule
+    match: Host(`minio.arlyon.dev`)
+    services:
+    - name: minio
+      namespace: minio
+      port: 9000
+  tls:
+    certResolver: ssl
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: minio-external-name
+  namespace: minio
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: minio.arlyon.dev
+spec:
+  type: ExternalName
+  externalName: traefik.arlyon.dev

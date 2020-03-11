@@ -1,43 +1,58 @@
 # InfraCode
 
-## Traefik
+## Services
+
+### Traefik
 
 This project uses traefik as the reverse proxy.
+To enable the dashboard we will need to create
+a username and password for the basic auth:
 
 ```
-helm install traefik traefik/traefik --values config/traefik-values.yaml
+./scripts/upload_password.sh arlyon
 ```
 
-Then, to enable the dashboard we will need to create an
-ingress route with basic auth.
+### ExternalDNS
 
-```
-./scripts/upload_password.sh
-kubectl apply -f kubernetes/traefik-dashboard.yaml
-```
+ExternalDNS is used alongside traefik to easily
+provision DNS entries for apps routed with traefik.
+It is currently connected to cloudflare.
 
-## ExternalDNS
+### Guacamole
 
-ExternalDNS is installed into the main namespace.
+Guacamole is used to provide remote desktop access
+to the cluster.
 
-```
-helm install external-dns stable/external-dns --values=config/external-dns-values.yaml
-```
+### OpenVPN
 
-## Guacamole
+OpenVPN provides secure VPN access to the cluster
+(and by extension home network). Once the instance
+is set up, you can provision certificates using the
+script:
 
-You can use this helm chart:
-
-```
-kubectl create namespace guacamole
-cd charts/guacamole-helm-chart
-helm install gaucamole . --values=../../config/guacamole-values.yaml --namespace=guacamole
+```bash
+./scripts/create_openvpn_cert.sh phone openvpn openvpn vpn.arlyon.dev
 ```
 
-## OpenVPN
+## Terraform
+
+Terraform is used to provision the required infrastructure.
+It depends on the `kubectl` plugin so download it:
 
 ```
-kubectl create namespace openvpn
-helm repo add stable http://storage.googleapis.com/kubernetes-charts
-helm install stable/openvpn
+mkdir -p ~/.terraform.d/plugins && \
+    curl -Ls https://api.github.com/repos/gavinbunney/terraform-provider-kubectl/releases/latest \
+    | jq -r ".assets[] | select(.browser_download_url | contains(\"$(uname -s | tr A-Z a-z)\")) | select(.browser_download_url | contains(\"amd64\")) | .browser_download_url" \
+    | xargs -n 1 curl -Lo ~/.terraform.d/plugins/terraform-provider-kubectl && \
+    chmod +x ~/.terraform.d/plugins/terraform-provider-kubectl
+```
+
+Then you will need to get some gcp service account credentials
+to pull the state from: https://cloud.google.com/docs/authentication/production.
+Place this in `terraform/gcp-credentials.json`. Then:
+
+```
+cd terraform
+terraform init
+terraform apply .
 ```
