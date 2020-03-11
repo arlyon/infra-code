@@ -12,8 +12,7 @@ Then, to enable the dashboard we will need to create an
 ingress route with basic auth.
 
 ```
-htpasswd -c ./auth arlyon
-kubectl create secret generic auth-secret --from-file auth
+./scripts/upload_password.sh
 kubectl apply -f kubernetes/traefik-dashboard.yaml
 ```
 
