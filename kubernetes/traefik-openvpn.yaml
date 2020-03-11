@@ -1,0 +1,24 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRouteTCP
+metadata:
+  name: openvpn
+  namespace: openvpn
+spec:
+  entryPoints:
+  - websecure
+  routes:
+  - match: HostSNI(`*`)
+    services:
+    - name: openvpn
+      namespace: openvpn
+      port: 443
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: openvpn-external-name
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: vpn.arlyon.dev
+spec:
+  type: ExternalName
+  externalName: traefik.arlyon.dev

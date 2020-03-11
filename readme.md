@@ -34,3 +34,11 @@ kubectl create namespace guacamole
 cd charts/guacamole-helm-chart
 helm install gaucamole . --values=../../config/guacamole-values.yaml --namespace=guacamole
 ```
+
+## OpenVPN
+
+```
+kubectl create namespace openvpn
+helm repo add stable http://storage.googleapis.com/kubernetes-charts
+helm install stable/openvpn
+```
