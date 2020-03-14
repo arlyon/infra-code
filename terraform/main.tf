@@ -1,13 +1,13 @@
 terraform {
   backend "gcs" {
-    bucket  = "tf-state-hermes"
-    prefix  = "terraform/state"
+    bucket      = "tf-state-hermes"
+    prefix      = "terraform/state"
     credentials = "gcp-credentials.json"
   }
 }
 
 provider "kubectl" {
-  config_context_cluster = "minikube-hermes"
+  config_context_cluster = "hermes"
 }
 
 data "helm_repository" "stable" {

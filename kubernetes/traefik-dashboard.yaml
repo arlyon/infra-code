@@ -6,7 +6,7 @@ spec:
   entryPoints:
   - websecure
   routes:
-  - match: Host(`traefik.arlyon.dev`)
+  - match: Host(`traefik.arlyon.dev`) && PathPrefix(`/dashboard`) || PathPrefix(`/api`)
     kind: Rule
     services:
     - name: api@internal
@@ -22,5 +22,4 @@ metadata:
   name: dashboard-auth
 spec:
   basicAuth:
-    secret: authsecret
-
+    secret: auth-secret
