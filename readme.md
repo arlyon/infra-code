@@ -56,3 +56,20 @@ cd terraform
 terraform init
 terraform apply .
 ```
+
+## Infrastructure
+
+Currently this is deployed on a 3-node k3s cluster running on alpine linux,
+using high-availability mode with an embedded DB. On k3s, it is decided that
+`metallb` will be used over the built-in `servicelb`.
+
+```bash
+# on the master node
+K3S_TOKEN=$TOKEN ./k3s.sh --cluster-init --no-deploy traefik --no-deploy servicelb
+
+# on the other nodes
+K3S_TOKEN=$TOKEN ./k3s.sh --server https://$IP_ADDR:6443
+```
+
+> Note: that on alpine linux the defaults are set to 4096 (FAR TOO LOW).
+> You can change the values in /etc/sysctl.d/00_alpine.conf!
