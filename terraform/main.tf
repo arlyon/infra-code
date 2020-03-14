@@ -20,6 +20,11 @@ data "helm_repository" "traefik" {
   url  = "https://containous.github.io/traefik-helm-chart"
 }
 
+data "helm_repository" "fairwinds" {
+  name = "fairwinds"
+  url  = "https://charts.fairwinds.com/stable"
+}
+
 resource "kubernetes_namespace" "guacamole" {
   metadata {
     name = "guacamole"
@@ -35,6 +40,12 @@ resource "kubernetes_namespace" "openvpn" {
 resource "kubernetes_namespace" "minio" {
   metadata {
     name = "minio"
+  }
+}
+
+resource "kubernetes_namespace" "monitoring" {
+  metadata {
+    name = "monitoring"
   }
 }
 
@@ -69,6 +80,14 @@ resource "helm_release" "openvpn" {
   version    = var.openvpn_version
   namespace  = kubernetes_namespace.openvpn.metadata[0].name
   values     = ["${file("../config/openvpn-values.yaml")}"]
+}
+
+resource "helm_release" "polaris" {
+  name       = "polaris"
+  repository = data.helm_repository.fairwinds.metadata[0].name
+  chart      = "polaris"
+  version    = var.polaris_version
+  namespace  = kubernetes_namespace.monitoring.metadata[0].name
 }
 
 resource "helm_release" "guacamole" {
@@ -123,21 +142,26 @@ resource "kubernetes_persistent_volume" "guacamole-mysql" {
 }
 
 resource "kubectl_manifest" "traefik-dashboard" {
-  yaml_body = file("../kubernetes/traefik-dashboard.yaml")
+  yaml_body  = file("../kubernetes/traefik-dashboard.yaml")
   depends_on = [helm_release.traefik]
 }
 
+resource "kubectl_manifest" "traefik-polaris" {
+  yaml_body  = file("../kubernetes/traefik-polaris.yaml")
+  depends_on = [helm_release.polaris]
+}
+
 resource "kubectl_manifest" "traefik-guacamole" {
-  yaml_body = file("../kubernetes/traefik-guacamole.yaml")
+  yaml_body  = file("../kubernetes/traefik-guacamole.yaml")
   depends_on = [helm_release.traefik, helm_release.guacamole]
 }
 
 resource "kubectl_manifest" "traefik-minio" {
-  yaml_body = file("../kubernetes/traefik-minio.yaml")
+  yaml_body  = file("../kubernetes/traefik-minio.yaml")
   depends_on = [helm_release.traefik, helm_release.minio]
 }
 
 resource "kubectl_manifest" "traefik-openvpn" {
-  yaml_body = file("../kubernetes/traefik-openvpn.yaml")
+  yaml_body  = file("../kubernetes/traefik-openvpn.yaml")
   depends_on = [helm_release.traefik, helm_release.openvpn]
 }

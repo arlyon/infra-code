@@ -22,6 +22,12 @@ variable "openvpn_version" {
   default     = "4.2.0"
 }
 
+variable "polaris_version" {
+  type        = string
+  description = "Which version of the polaris chart to use."
+  default     = "0.10.2"
+}
+
 variable "guacamole_version" {
   type        = string
   description = "Which version of the guacamole chart to use."

@@ -1,0 +1,31 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: polaris
+  namespace: monitoring
+spec:
+  entryPoints:
+  - websecure
+  routes:
+  - kind: Rule
+    match: Host(`polaris.arlyon.dev`)
+    services:
+    - name: polaris-dashboard
+      namespace: monitoring
+      port: 80
+    middlewares:
+    - name: dashboard-auth
+      namespace: default
+  tls:
+    certResolver: ssl
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: polaris-external-name
+  namespace: monitoring
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: polaris.arlyon.dev
+spec:
+  type: ExternalName
+  externalName: traefik.arlyon.dev
