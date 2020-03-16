@@ -1,3 +1,6 @@
 [submodule "charts/guacamole"]
 	path = charts/guacamole
 	url = git@github.com:arlyon/apache-guacamole-helm-chart.git
+[submodule "charts/traefik"]
+	path = charts/traefik
+	url = git@github.com:containous/traefik-helm-chart.git
