@@ -15,6 +15,11 @@ data "helm_repository" "stable" {
   url  = "http://storage.googleapis.com/kubernetes-charts"
 }
 
+data "helm_repository" "jaeger" {
+  name = "jaeger"
+  url  = "https://jaegertracing.github.io/helm-charts"
+}
+
 data "helm_repository" "traefik" {
   name = "traefik"
   url  = "https://containous.github.io/traefik-helm-chart"
@@ -23,6 +28,11 @@ data "helm_repository" "traefik" {
 data "helm_repository" "fairwinds" {
   name = "fairwinds"
   url  = "https://charts.fairwinds.com/stable"
+}
+
+data "helm_repository" "elastic" {
+  name = "elastic"
+  url  = "https://helm.elastic.co"
 }
 
 resource "kubernetes_namespace" "guacamole" {
@@ -63,6 +73,31 @@ resource "helm_release" "external-dns" {
   chart      = "external-dns"
   version    = var.external_dns_version
   values     = ["${file("../config/external-dns-values.yaml")}"]
+}
+
+resource "helm_release" "jaeger-operator" {
+  name       = "jaeger-operator"
+  repository = data.helm_repository.jaeger.metadata[0].name
+  chart      = "jaeger-operator"
+  namespace  = kubernetes_namespace.monitoring.metadata[0].name
+  version    = var.jaeger_version
+  values     = ["${file("../config/jaeger-operator-values.yaml")}"]
+}
+
+resource "helm_release" "elasticsearch" {
+  name       = "elasticsearch"
+  repository = data.helm_repository.elastic.metadata[0].name
+  chart      = "elasticsearch"
+  namespace  = kubernetes_namespace.monitoring.metadata[0].name
+  version    = var.elastic_version
+}
+
+resource "helm_release" "kibana" {
+  name       = "kibana"
+  repository = data.helm_repository.elastic.metadata[0].name
+  chart      = "kibana"
+  namespace  = kubernetes_namespace.monitoring.metadata[0].name
+  version    = var.elastic_version
 }
 
 resource "helm_release" "minio" {
@@ -144,6 +179,11 @@ resource "kubernetes_persistent_volume" "guacamole-mysql" {
 resource "kubectl_manifest" "traefik-dashboard" {
   yaml_body  = file("../kubernetes/traefik-dashboard.yaml")
   depends_on = [helm_release.traefik]
+}
+
+resource "kubectl_manifest" "jaeger" {
+  yaml_body  = file("../kubernetes/jaeger.yaml")
+  depends_on = [helm_release.jaeger-operator]
 }
 
 resource "kubectl_manifest" "traefik-polaris" {

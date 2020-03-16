@@ -33,3 +33,15 @@ variable "guacamole_version" {
   description = "Which version of the guacamole chart to use."
   default     = "0.2.0"
 }
+
+variable "jaeger_version" {
+  type        = string
+  description = "Which version of the jaeger-operator chart to use."
+  default     = "2.13.1"
+}
+
+variable "elastic_version" {
+  type        = string
+  description = "Which version of the elastic chart to use."
+  default     = "7.6.1"
+}

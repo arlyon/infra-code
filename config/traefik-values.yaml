@@ -2,3 +2,8 @@ additionalArguments:
 - --certificatesresolvers.ssl.acme.tlschallenge=true
 - --certificatesresolvers.ssl.acme.email=alex@arlyon.dev
 - --certificatesresolvers.ssl.acme.storage=acme.json
+- --tracing.jaeger=true
+
+deployment:
+  annotations:
+    'sidecar.jaegertracing.io/inject': 'jaeger'
