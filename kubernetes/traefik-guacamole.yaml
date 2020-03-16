@@ -13,8 +13,6 @@ spec:
     - name: guacamole
       namespace: guacamole
       port: 80
-    middlewares:
-    - name: replacepath
   tls:
     certResolver: ssl
 ---
