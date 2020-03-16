@@ -1,3 +1,4 @@
 provider: cloudflare
 cloudflare:
-  apiToken: h3YIctR_DzMRFIU8HGPhaKdDvIIX-HB2zQDpb4FH
+  apiKey: 7c68bfa19f743dd9a9aaed273746d3f85deda
+  email: arlyon@me.com

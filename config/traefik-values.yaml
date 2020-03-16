@@ -1,5 +1,6 @@
 additionalArguments:
-- --certificatesresolvers.ssl.acme.tlschallenge=true
+- --certificatesresolvers.ssl.acme.dnschallenge=true
+- --certificatesresolvers.ssl.acme.dnschallenge.provider=cloudflare
 - --certificatesresolvers.ssl.acme.email=alex@arlyon.dev
 - --certificatesresolvers.ssl.acme.storage=acme.json
 - --tracing.jaeger=true
@@ -7,3 +8,9 @@ additionalArguments:
 deployment:
   annotations:
     'sidecar.jaegertracing.io/inject': 'jaeger'
+
+env:
+- name: CF_API_KEY
+  value: 7c68bfa19f743dd9a9aaed273746d3f85deda
+- name: CF_API_EMAIL
+  value: arlyon@me.com
