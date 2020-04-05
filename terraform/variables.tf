@@ -1,7 +1,7 @@
 variable "traefik_version" {
   type        = string
   description = "Which version of the traefik chart to use."
-  default     = "6.0.0"
+  default     = "7.2.0"
 }
 
 variable "minio_version" {

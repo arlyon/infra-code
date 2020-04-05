@@ -61,7 +61,7 @@ resource "kubernetes_namespace" "monitoring" {
 
 resource "helm_release" "traefik" {
   name       = "traefik"
-  repository = "../charts/traefik"
+  repository = data.helm_repository.traefik.metadata[0].name
   chart      = "traefik"
   version    = var.traefik_version
   values     = ["${file("../config/traefik-values.yaml")}"]
